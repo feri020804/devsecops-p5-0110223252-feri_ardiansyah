@@ -80,20 +80,30 @@ Pengujian berikut telah dilakukan dan berhasil:
 
 ## Overview Pipeline DevSecOps
 
-Pipeline direncanakan menggunakan GitHub Actions dengan konfigurasi
-.github/workflows/devsecops.yml.
-
-Workflow akan dipicu oleh:
+Workflow tersedia di `.github/workflows/devsecops.yml` dan dikonfigurasi untuk berjalan pada:
 - Push ke branch main.
 - Pull request menuju branch main.
 
-Tahapan pipeline:
-1. Job build: menyiapkan Python, memeriksa kompilasi source code, dan menjalankan unit test yang akan ditambahkan.
-2. Job sast-scan: menjalankan analisis keamanan kode menggunakan Bandit setelah job build berhasil.
-3. Quality Gate: menentukan kelulusan berdasarkan hasil pengujian dan ambang temuan keamanan yang akan dikonfigurasi.
+Pipeline memiliki dua job dengan runner ubuntu-latest:
 
-Kedua job akan menggunakan runner ubuntu-latest.
-Job sast-scan akan bergantung pada job build melalui needs: build.
+1. build: menyiapkan Python 3.12, memeriksa kompilasi lima file source code, dan menjalankan enam unit test.
+2. sast-scan: berjalan setelah build berhasil melalui needs: build, memasang Bandit, dan memindai lima file source code aplikasi.
 
-Status: workflow, unit test otomatis, SAST, dan Quality Gate belum diimplementasikan. Dokumentasi ini akan diperbarui setelah konfigurasi dan pengujian pipeline selesai.
+Quality Gate awal:
+- Pemeriksaan kompilasi harus berhasil.
+- Seluruh unit test harus lulus.
+- Bandit tidak boleh melaporkan temuan pada ambang severity low dan confidence low atau lebih tinggi.
+- Kegagalan pemeriksaan menyebabkan pipeline gagal.
+
+Unit test menggunakan penyimpanan sementara sehingga tidak mengubah data aset pengguna.
+
+### Menjalankan Unit Test
+
+Jalankan di Windows:
+
+    py -m unittest discover -v
+
+Hasil pengujian lokal: enam unit test berhasil.
+
+Status: konfigurasi workflow telah dibuat; hasil eksekusi GitHub Actions belum diverifikasi.
 # devsecops-p5-0110223252-feri_ardiansyah
