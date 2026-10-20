@@ -1,1 +1,56 @@
+name: DevSecOps Pipeline
 
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check Python compilation
+        run: >
+          python -m py_compile
+          main.py models.py validators.py
+          storage.py services.py
+
+      - name: Run unit tests
+        run: python -m unittest discover -v
+
+  sast-scan:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Bandit
+        run: python -m pip install bandit
+
+      - name: Run SAST and security gate
+        run: >
+          bandit
+          main.py models.py validators.py
+          storage.py services.py
+          --severity-level low
+          --confidence-level low
