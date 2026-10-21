@@ -4,8 +4,8 @@ Aplikasi inventaris aset berbasis terminal untuk mencatat aset, menampilkan daft
 
 ## Identitas
 
-- Nama: Syahrul Mubaroq
-- NIM: 0110223236
+- Nama: Feri Ardiansyah
+- NIM: 0110223252
 - Program Studi: Teknik Informatika
 - Tugas: DevSecOps Pertemuan 5
 
